@@ -1,11 +1,14 @@
 import {Module} from '@nestjs/common';
 import {TypeOrmModule} from '@nestjs/typeorm';
 import {ConfigModule, ConfigService} from '@nestjs/config';
+import {UserModule} from './user/user.module';
+import {AuthModule} from './auth/auth.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: `.env.${process.env.NODE_ENV || 'dev'}`,
+      isGlobal: true,
       expandVariables: true
     }),
     TypeOrmModule.forRootAsync({
@@ -17,13 +20,15 @@ import {ConfigModule, ConfigService} from '@nestjs/config';
         username: config.get<string>('DB_USER'),
         password: config.get<string>('DB_PASS'),
         database: config.get<string>('DB_NAME'),
-        dropSchema: config.get<boolean>('DB_DROP')
+        dropSchema: config.get<boolean>('DB_DROP'),
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        synchronize: true
       }),
       inject: [ConfigService]
-    })
-  ],
-  controllers: [],
-  providers: [],
+    }),
+    UserModule,
+    AuthModule
+  ]
 })
 export class AppModule {
 }

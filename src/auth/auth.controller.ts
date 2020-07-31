@@ -1,4 +1,4 @@
-import {Body, Controller, Post} from '@nestjs/common';
+import {Body, ClassSerializerInterceptor, Controller, Post, UseInterceptors} from '@nestjs/common';
 import {LoginDto} from './dto/login.dto';
 import {AuthService} from './auth.service';
 import {RegisterDto} from './dto/register.dto';
@@ -14,6 +14,7 @@ export class AuthController {
     return this.authService.login(dto);
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Post('register')
   public register(@Body() dto: RegisterDto): Promise<User> {
     return this.authService.register(dto);

@@ -3,6 +3,7 @@ import {TypeOrmModule} from '@nestjs/typeorm';
 import {ConfigModule, ConfigService} from '@nestjs/config';
 import {UserModule} from './user/user.module';
 import {AuthModule} from './auth/auth.module';
+import {ProjectModule} from './project/project.module';
 
 @Module({
   imports: [
@@ -14,7 +15,7 @@ import {AuthModule} from './auth/auth.module';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (config: ConfigService) => ({
-        type: 'mysql',
+        type: config.get<any>('DB_TYPE'),
         host: config.get<string>('DB_HOST'),
         port: config.get<number>('DB_PORT'),
         username: config.get<string>('DB_USER'),
@@ -22,12 +23,13 @@ import {AuthModule} from './auth/auth.module';
         database: config.get<string>('DB_NAME'),
         dropSchema: config.get<boolean>('DB_DROP'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: true
+        synchronize: config.get<boolean>('DB_SYNCHRONIZE')
       }),
       inject: [ConfigService]
     }),
     UserModule,
-    AuthModule
+    AuthModule,
+    ProjectModule
   ]
 })
 export class AppModule {

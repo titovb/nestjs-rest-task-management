@@ -1,6 +1,5 @@
 import {BadRequestException, Injectable, UnauthorizedException} from '@nestjs/common';
 import {User} from '../user/user.entity';
-import {InjectRepository} from '@nestjs/typeorm';
 import {UserRepository} from '../user/user.repository';
 import {JwtService} from '@nestjs/jwt';
 import {RegisterDto} from './dto/register.dto';
@@ -9,7 +8,7 @@ import {LoginDto} from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
-  constructor(@InjectRepository(User) private readonly userRepository: UserRepository,
+  constructor(private readonly userRepository: UserRepository,
               private readonly jwtService: JwtService) {
   }
 
@@ -30,7 +29,8 @@ export class AuthService {
 
   public validateUser(id: string): Promise<User> {
     return this.userRepository.findOneOrFail(id)
-      .catch(() => {
+      .catch(err => {
+        console.log(err);
         throw new UnauthorizedException();
       });
   }

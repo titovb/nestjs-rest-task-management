@@ -1,4 +1,6 @@
-import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm/index';
+import {Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn} from 'typeorm/index';
+import {Project} from '../project/project.entity';
+import {Exclude} from 'class-transformer';
 
 @Entity()
 export class User {
@@ -11,6 +13,13 @@ export class User {
   @Column()
   email: string;
 
+  @Exclude()
   @Column()
   password: string;
+
+  @OneToMany(() => Project, project => project.owner)
+  ownedProjects: Project[];
+
+  @ManyToMany(() => Project, project => project.participants)
+  projects: Project[];
 }

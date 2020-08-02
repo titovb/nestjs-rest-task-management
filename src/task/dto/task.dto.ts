@@ -1,8 +1,8 @@
-import {IsOptional} from 'class-validator';
 import {IsNotEmptyString} from '../../common/is-not-empty-string.validator';
+import {IsOptional} from 'class-validator';
 import {ApiProperty, ApiPropertyOptional} from '@nestjs/swagger';
 
-export class ProjectDto {
+export class TaskDto {
   @ApiProperty()
   @IsNotEmptyString()
   name: string;

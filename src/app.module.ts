@@ -5,6 +5,7 @@ import {UserModule} from './user/user.module';
 import {AuthModule} from './auth/auth.module';
 import {ProjectModule} from './project/project.module';
 import {ColumnModule} from './column/column.module';
+import { TaskModule } from './task/task.module';
 
 @Module({
   imports: [
@@ -31,7 +32,8 @@ import {ColumnModule} from './column/column.module';
     UserModule,
     AuthModule,
     ProjectModule,
-    ColumnModule
+    ColumnModule,
+    TaskModule
   ]
 })
 export class AppModule {

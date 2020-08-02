@@ -5,6 +5,7 @@ import {RegisterDto} from './dto/register.dto';
 import * as bcrypt from 'bcrypt';
 import {LoginDto} from './dto/login.dto';
 import {UserService} from '../user/user.service';
+import {LoginResDto} from './dto/login-res.dto';
 
 @Injectable()
 export class AuthService {
@@ -19,7 +20,7 @@ export class AuthService {
     return this.userService.create(new UserEntity(dto));
   }
 
-  public async login(dto: LoginDto): Promise<{token: string}> {
+  public async login(dto: LoginDto): Promise<LoginResDto> {
     const user = await this.userService.getOneByEmail(dto.email);
     if (!user) throw new BadRequestException(`Incorrect email`);
     const isPassCorrect = await bcrypt.compare(dto.password, user.password);

@@ -11,7 +11,8 @@ import {ProjectModule} from '../project/project.module';
     ProjectModule
   ],
   controllers: [ColumnController],
-  providers: [ColumnService]
+  providers: [ColumnService],
+  exports: [ColumnService]
 })
 export class ColumnModule {
 }

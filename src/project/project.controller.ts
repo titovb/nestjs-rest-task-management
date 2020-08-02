@@ -1,6 +1,6 @@
 import {
-  BadRequestException,
-  Body, ClassSerializerInterceptor,
+  Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -11,81 +11,67 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import {ProjectService} from './project.service';
-import {Project} from './project.entity';
+import {ProjectEntity} from './project.entity';
 import {AuthGuard} from '@nestjs/passport';
-import {ProjectCreateDto} from './dto/project-create.dto';
+import {ProjectDto} from './dto/project.dto';
 import {CurrentUser} from '../auth/current-user.decorator';
-import {User} from '../user/user.entity';
-import {ProjectUpdateDto} from './dto/project-update.dto';
-import {isUUID} from 'class-validator';
+import {UserEntity} from '../user/user.entity';
+import {IsUUIDPipe} from '../common/is-uuid.pipe';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('project')
+@UseGuards(AuthGuard('jwt'))
 export class ProjectController {
 
   constructor(private readonly projectService: ProjectService) {
   }
 
   @Post()
-  @UseGuards(AuthGuard('jwt'))
-  public create(@CurrentUser() user: User, @Body() dto: ProjectCreateDto): Promise<Project> {
+  public create(@CurrentUser() user: UserEntity, @Body() dto: ProjectDto): Promise<ProjectEntity> {
     return this.projectService.create(user, dto);
   }
 
   @Put(':id')
-  @UseGuards(AuthGuard('jwt'))
-  public update(@CurrentUser() user: User,
-                @Param('id') id: string,
-                @Body() dto: ProjectUpdateDto): Promise<Project> {
-    if (!isUUID(id)) throw new BadRequestException('Incorrect id');
+  public update(@CurrentUser() user: UserEntity,
+                @Param('id', IsUUIDPipe) id: string,
+                @Body() dto: ProjectDto): Promise<ProjectEntity> {
     return this.projectService.update(user.id, id, dto);
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard('jwt'))
-  public delete(@CurrentUser() user: User, @Param('id') id: string): Promise<Project> {
-    if (!isUUID(id)) throw new BadRequestException('Incorrect id');
+  public delete(@CurrentUser() user: UserEntity,
+                @Param('id', IsUUIDPipe) id: string): Promise<ProjectEntity> {
     return this.projectService.delete(user.id, id);
   }
 
   @Get(':id')
-  @UseGuards(AuthGuard('jwt'))
-  public getOneById(@CurrentUser() user: User, @Param('id') id: string): Promise<Project> {
-    if (!isUUID(id)) throw new BadRequestException('Incorrect id');
+  public getOneById(@CurrentUser() user: UserEntity,
+                    @Param('id', IsUUIDPipe) id: string): Promise<ProjectEntity> {
     return this.projectService.getOneById(user.id, id);
   }
 
   @Get()
-  @UseGuards(AuthGuard('jwt'))
-  public get(@CurrentUser() user: User): Promise<Project[]> {
+  public get(@CurrentUser() user: UserEntity): Promise<ProjectEntity[]> {
     return this.projectService.get(user.id);
   }
 
   @Post(':id/participant/:participantId')
-  @UseGuards(AuthGuard('jwt'))
-  public addParticipant(@CurrentUser() user: User,
-                        @Param('id') id: string,
-                        @Param('participantId') participantId: string): Promise<User[]> {
-    if (!isUUID(id)) throw new BadRequestException('Incorrect id');
-    if (!isUUID(participantId)) throw new BadRequestException('Incorrect participantId');
+  public addParticipant(@CurrentUser() user: UserEntity,
+                        @Param('id', IsUUIDPipe) id: string,
+                        @Param('participantId', IsUUIDPipe) participantId: string): Promise<UserEntity[]> {
     return this.projectService.addParticipant(user.id, id, participantId);
   }
 
   @Delete(':id/participant/:participantId')
-  @UseGuards(AuthGuard('jwt'))
-  public removeParticipant(@CurrentUser() user: User,
-                           @Param('id') id: string,
-                           @Param('participantId') participantId: string): Promise<User[]> {
-    if (!isUUID(id)) throw new BadRequestException('Incorrect id');
-    if (!isUUID(participantId)) throw new BadRequestException('Incorrect participantId');
+  public removeParticipant(@CurrentUser() user: UserEntity,
+                           @Param('id', IsUUIDPipe) id: string,
+                           @Param('participantId', IsUUIDPipe) participantId: string): Promise<UserEntity[]> {
     return this.projectService.removeParticipant(user.id, id, participantId);
   }
 
   @Get(':id/participant')
-  @UseGuards(AuthGuard('jwt'))
-  public getParticipants(@CurrentUser() user: User,
-                         @Param('id') id: string): Promise<User[]> {
-    if (!isUUID(id)) throw new BadRequestException('Incorrect id');
+  public getParticipants(@CurrentUser() user: UserEntity,
+                         @Param('id', IsUUIDPipe) id: string): Promise<UserEntity[]> {
     return this.projectService.getParticipants(user.id, id);
   }
 }

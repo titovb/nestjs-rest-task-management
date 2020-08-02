@@ -1,13 +1,11 @@
-import {IsEmail} from 'class-validator';
+import {IsOptional} from 'class-validator';
 import {IsNotEmptyString} from '../../common/is-not-empty-string.validator';
 
-export class RegisterDto {
+export class ProjectDto {
   @IsNotEmptyString()
   name: string;
 
-  @IsEmail()
-  email: string;
-
+  @IsOptional()
   @IsNotEmptyString()
-  password: string;
+  description: string;
 }

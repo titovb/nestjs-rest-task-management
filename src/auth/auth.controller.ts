@@ -2,7 +2,7 @@ import {Body, ClassSerializerInterceptor, Controller, Post, UseInterceptors} fro
 import {LoginDto} from './dto/login.dto';
 import {AuthService} from './auth.service';
 import {RegisterDto} from './dto/register.dto';
-import {User} from '../user/user.entity';
+import {UserEntity} from '../user/user.entity';
 
 @Controller()
 export class AuthController {
@@ -16,7 +16,7 @@ export class AuthController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Post('register')
-  public register(@Body() dto: RegisterDto): Promise<User> {
+  public register(@Body() dto: RegisterDto): Promise<UserEntity> {
     return this.authService.register(dto);
   }
 }

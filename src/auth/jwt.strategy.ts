@@ -3,7 +3,7 @@ import {ExtractJwt, Strategy} from 'passport-jwt';
 import {ConfigService} from '@nestjs/config';
 import {Injectable, UnauthorizedException} from '@nestjs/common';
 import {AuthService} from './auth.service';
-import {User} from '../user/user.entity';
+import {UserEntity} from '../user/user.entity';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -16,7 +16,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  public validate(payload: any): Promise<User> {
+  public validate(payload: any): Promise<UserEntity> {
     const id = payload.sub;
     if (!id) throw new UnauthorizedException();
     return this.authService.validateUser(id);

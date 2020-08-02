@@ -1,49 +1,30 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinTable,
-  ManyToMany,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm/index';
-import {User} from '../user/user.entity';
+import {Column, Entity, JoinTable, ManyToMany, ManyToOne} from 'typeorm/index';
+import {UserEntity} from '../user/user.entity';
 import {Exclude} from 'class-transformer';
+import {TouchableEntity} from '../common/touchable-entity';
 
 @Entity()
-export class Project {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
+export class ProjectEntity extends TouchableEntity {
   @Column()
   name: string;
 
   @Column({nullable: true})
   description: string;
 
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
-
-  @Column({nullable: true})
-  ownerId: string;
+  @Exclude()
+  @ManyToOne(() => UserEntity)
+  createdBy: UserEntity;
 
   @Exclude()
-  @ManyToOne(() => User, user => user.id)
-  owner: User;
-
-  @Column({nullable: true})
-  updatedById: string;
+  @ManyToOne(() => UserEntity)
+  updatedBy: UserEntity;
 
   @Exclude()
-  @ManyToOne(() => User)
-  updatedBy: User;
-
-  @Exclude()
-  @ManyToMany(() => User, user => user.id)
+  @ManyToMany(() => UserEntity)
   @JoinTable()
-  participants: User[];
+  participants: UserEntity[];
+
+  constructor(partial: Partial<ProjectEntity>) {
+    super(partial);
+  }
 }

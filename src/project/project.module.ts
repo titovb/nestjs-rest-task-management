@@ -11,7 +11,8 @@ import {ProjectRepository} from './project.repository';
     UserModule
   ],
   controllers: [ProjectController],
-  providers: [ProjectService]
+  providers: [ProjectService],
+  exports: [ProjectService]
 })
 export class ProjectModule {
 }

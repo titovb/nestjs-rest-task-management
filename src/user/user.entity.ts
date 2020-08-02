@@ -1,12 +1,9 @@
-import {Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn} from 'typeorm/index';
-import {Project} from '../project/project.entity';
+import {Column, Entity} from 'typeorm/index';
 import {Exclude} from 'class-transformer';
+import {BaseEntity} from '../common/base-entity';
 
 @Entity()
-export class User {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
+export class UserEntity extends BaseEntity {
   @Column()
   name: string;
 
@@ -17,9 +14,7 @@ export class User {
   @Column()
   password: string;
 
-  @OneToMany(() => Project, project => project.owner)
-  ownedProjects: Project[];
-
-  @ManyToMany(() => Project, project => project.participants)
-  projects: Project[];
+  constructor(partial: Partial<UserEntity>) {
+    super(partial);
+  }
 }

@@ -11,7 +11,7 @@ export class ColumnExistsInterceptor implements NestInterceptor {
   public async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
     const req = context.switchToHttp().getRequest();
     const projectId = req.params.projectId;
-    const columnId = req.params.colummnId;
+    const columnId = req.params.columnId;
     if (!isUUID(projectId)) throw new BadRequestException('projectId param should be an uuid');
     if (!isUUID(columnId)) throw new BadRequestException('columnId param should be an uuid');
     await this.columnService.getOneByIdAndProjectId(columnId, projectId);

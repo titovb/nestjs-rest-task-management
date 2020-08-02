@@ -72,7 +72,7 @@ export class ProjectController {
   }
 
   @ApiOkResponse({type: UserEntity, isArray: true})
-  @Put(':id/participant/:participantId')
+  @Delete(':id/participant/:participantId')
   public removeParticipant(@CurrentUser() user: UserEntity,
                            @Param('id', IsUUIDPipe) id: string,
                            @Param('participantId', IsUUIDPipe) participantId: string): Promise<UserEntity[]> {
